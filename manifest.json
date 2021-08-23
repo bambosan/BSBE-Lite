@@ -1,0 +1,23 @@
+{
+    "format_version": 2,
+    "metadata": {
+        "authors": [ "bambosan" ],
+        "url": "",
+        "license": "MIT License"
+    },
+    "header": {
+        "name": "bicubic shader renewed 1.0",
+        "description": "a shader for minecraft be",
+        "uuid": "b9c68a8e-eaf0-46fc-bf19-e66ca60906e8",
+        "version": [0, 1, 0],
+        "min_engine_version": [1, 14, 1]
+    },
+    "modules": [
+        {
+            "description": "a shader for minecraft be",
+            "type": "resources",
+            "uuid": "d507d835-7bfb-48a7-9541-c57dbeb10db7",
+            "version": [0, 1, 0]
+        }
+    ]
+}
