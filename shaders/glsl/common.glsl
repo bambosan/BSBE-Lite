@@ -60,11 +60,11 @@ vec3 colcor(vec3 col){
 }
 
 vec3 ccc(){
-	vec3 cloudc = mix(mix(mix(vec3(0.9, 1.0, 1.1), vec3(0.9, 0.6, 0.3), dfog), vec3(0.15, 0.2, 0.29), nfog), FOG_COLOR.rgb * 2.0, rain);
+	vec3 cloudc = mix(mix(mix(vec3(0.85, 1.0, 1.1), vec3(0.9, 0.6, 0.3), dfog), vec3(0.15, 0.2, 0.29), nfog), FOG_COLOR.rgb * 2.0, rain);
 	return tl(cloudc);
 }
 vec3 csc(hp float skyh){
-	vec3 skyc = mix(mix(mix(vec3(0.0, 0.43, 0.8), vec3(0.065, 0.15, 0.25), nfog), vec3(0.5, 0.4, 0.6), dfog), FOG_COLOR.rgb * 2.0, rain);
+	vec3 skyc = mix(mix(mix(vec3(0.0, 0.5, 0.9), vec3(0.065, 0.15, 0.25), nfog), vec3(0.5, 0.4, 0.6), dfog), FOG_COLOR.rgb * 2.0, rain);
 	vec3 scc = mix(mix(mix(vec3(0.75, 0.98, 1.15), vec3(1.0, 0.4, 0.5), dfog), skyc + 0.15, nfog), FOG_COLOR.rgb * 2.0, rain);
 		skyc = tl(skyc);
 		scc = tl(scc);
