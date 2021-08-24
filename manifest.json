@@ -6,18 +6,18 @@
         "license": "MIT License"
     },
     "header": {
-        "name": "Bicubic Shader BE Renewed 1.0",
+        "name": "Bicubic Shader BE Renewed 1.1",
         "description": "a shaders for minecraft be",
-        "uuid": "b9c68a8e-eaf0-46fc-bf19-e66ca60906e8",
-        "version": [0, 1, 0],
+        "uuid": "e12647d9-b7ea-493e-a7f4-7dad52a7d113",
+        "version": [0, 1, 1],
         "min_engine_version": [1, 14, 1]
     },
     "modules": [
         {
             "description": "a shader for minecraft be",
             "type": "resources",
-            "uuid": "d507d835-7bfb-48a7-9541-c57dbeb10db7",
-            "version": [0, 1, 0]
+            "uuid": "006e3db1-4375-4839-ac78-bfeb45571fe7",
+            "version": [0, 1, 1]
         }
     ]
 }
