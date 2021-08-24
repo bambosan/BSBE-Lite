@@ -54,7 +54,7 @@ void main(){
 		if(COLOR.a < 0.7 && COLOR.a > 0.5) worldPos.y += gwave * 0.05 * fract(POSITION.y);
 	#endif
 	#ifdef ALPHA_TEST
-		if((COLOR.r != COLOR.g && COLOR.g != COLOR.b && frp.y != 0.015625) || (frp.y == 0.9375 && (frp.x == 0.0 || frp.z == 0.0))) worldPos.xyz += gwave * 0.03 * (1.-saturate(length(worldPos.xyz) / FAR_CHUNKS_DISTANCE)) * TEXCOORD_1.y;
+		if((COLOR.r != COLOR.g && COLOR.g != COLOR.b && frp.y != 0.015625) || (frp.y == 0.9375 && (frp.x == 0.0 || frp.z == 0.0))) worldPos.xyz += gwave * 0.03 * (1.-stre(length(worldPos.xyz) / FAR_CHUNKS_DISTANCE)) * TEXCOORD_1.y;
 	#endif
 	if(FOG_CONTROL.x == 0.0) worldPos.xyz += gwave * 0.05;
 	POS4 pos = WORLDVIEW * vec4(worldPos.xyz, 1.0);
@@ -76,6 +76,6 @@ void main(){
 	#ifdef ALLOW_FADE
 		len += RENDER_CHUNK_FOG_ALPHA;
 	#endif
-	fogr = saturate((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x));
+	fogr = stre((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x));
 #endif
 }

@@ -170,9 +170,7 @@ testColor.a *= alphaTestMultiplier;
 #endif
 
 	color.rgb = tl(color.rgb);
-	vec3 newfc = sr(normalize(wpos));
-	if(dep > 0.1) color.rgb = mix(color.rgb, newfc * vec3(0.8, 0.9, 1.0), max0(length(wpos) * (0.001 + 0.005 * rain)));
-	color.rgb = mix(color.rgb, newfc, sqr5(fogd));
+	color.rgb = mix(color.rgb, sr(normalize(wpos)), fogd);
 	color.rgb = colcor(color.rgb * 1.5);
 
 #ifdef GLINT

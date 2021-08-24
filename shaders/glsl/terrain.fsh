@@ -43,7 +43,7 @@ vec3 gett(vec3 n){
 	return t;
 }
 float cwav(hp vec2 pos){
-	hp float wave = (1.0 - noise(pos * 1.3 - TOTAL_REAL_WORLD_TIME * 1.5)) + noise(pos + TOTAL_REAL_WORLD_TIME);
+	hp float wave = (1.0 - noise(pos * 2.0 - TOTAL_REAL_WORLD_TIME * 1.5)) + noise(pos + TOTAL_REAL_WORLD_TIME);
 	return wave;
 }
 vec3 calcnw(vec3 n){
@@ -61,7 +61,7 @@ float fschlick(float f0, hp float ndv){
 	return f0 + (1.0 - f0) * sqr5(1.0 - ndv);
 }
 vec4 reflection(vec4 diff, vec3 n, vec3 lsc){
-	vec3 rv = reflect(normalize(wpos), n), vdir = normalize(-wpos);
+	hp vec3 rv = reflect(normalize(wpos), n), vdir = normalize(-wpos);
 	float ndv = max0(dot(n, vdir)), zen = max0(rv.y) * 1.2;
 	float fresnel = fschlick(0.5, ndv);
 	diff = vec4(0.1);
@@ -76,7 +76,7 @@ vec4 reflection(vec4 diff, vec3 n, vec3 lsc){
 }
 
 vec3 illum(vec3 diff, vec3 n, vec3 lsc, float lmb){
-	float dusk = min(smoothstep(0.3, 0.5, lmb), smoothstep(1.0, 0.8, lmb)) * (1.0 - rain), night = saturate(smoothstep(1.0, 0.2, lmb) * 1.5);
+	float dusk = min(smoothstep(0.4, 1.0, lmb), smoothstep(1.0, 0.8, lmb)) * (1.0 - rain), night = smoothstep(1.0, 0.2, lmb);
 	hp float smap = mix(mix(mix(1.0, 0.2, max0(abs(n.x))), 0.0, smoothstep(0.87, 0.845, uv1.y)), 0.0, rain);
 		smap = mix(smap, 1.0, smoothstep(lmb * uv1.y, 1.0, uv1.x));
 	vec3 almap = mix(mix(vec3(0.3, 0.55, 1.0), vec3(0.0), night), vec3(0.5), rain * (1.0 - night)) * uv1.y;
@@ -137,7 +137,7 @@ vec4 inColor = color;
 	vec3 n = normalize(cross(dFdx(cpos.xyz), dFdy(cpos.xyz)));
 	float lmb = texture2D(TEXTURE_1, vec2(0, 1)).r;
 	float bls = max(uv1.x * smoothstep(lmb * uv1.y, 1.0, uv1.x), uv1.x * rain * uv1.y);
-	vec3 lsc = vec3(1.0, 0.35, 0.0) * bls + sqr5(bls);
+	vec3 lsc = vec3(1.0, 0.4, 0.0) * bls + sqr5(bls);
 	diffuse.rgb = illum(diffuse.rgb, n, lsc, lmb);
 	if(waterd){
 		n = calcnw(n);
@@ -146,12 +146,10 @@ vec4 inColor = color;
 	if(FOG_CONTROL.x == 0.0){
 		hp float caus = cwav(cpos.xz);
 		if(!waterd) diffuse.rgb = vec3(0.3, 0.6, 1.0) * diffuse.rgb + diffuse.rgb * max0(caus) * uv1.y;
-		diffuse.rgb += diffuse.rgb * (uv1.x * uv1.x) * (1.0 - uv1.y);
+		diffuse.rgb += diffuse.rgb * uv1.x * (1.0 - uv1.y);
 	}
-	vec3 newfc = sr(normalize(wpos));
-	diffuse.rgb = mix(diffuse.rgb, newfc, max0(length(wpos) * (0.001 + 0.005 * rain)));
 #ifdef FOG
-	diffuse.rgb = mix(diffuse.rgb, newfc, sqr5(fogr));
+	diffuse.rgb = mix(diffuse.rgb, sr(normalize(wpos)), fogr);
 #endif
 	diffuse.rgb = colcor(diffuse.rgb);
 
