@@ -1,7 +1,8 @@
 #define hp highp
 #define max0(x) max(0.0, x)
 #define stre(x) clamp(x, 0.0, 1.0)
-#define rain smoothstep(0.6, 0.3, FOG_CONTROL.x)
+#define csmooth(x) x * x * (3.0 - 2.0 * x)
+#define rain smoothstep(0.65, 0.2, FOG_CONTROL.x)
 #define nfog stre(1.0 - FOG_COLOR.r * 1.5)
 #define dfog stre(FOG_COLOR.r - smoothstep(0.3, 1.0, FOG_COLOR.b))
 
@@ -13,20 +14,20 @@ float sqr5(float x){ return x * x * x * x * x; }
 
 float hash(hp float n){ return fract(sin(n) * 43758.5453); }
 float noise(hp vec2 pos){
-	hp vec2 ip = floor(pos), fp = smoothstep(0.0, 1.0, fract(pos));
+	hp vec2 ip = floor(pos), fp = csmooth(fract(pos));
 	hp float n = ip.x + ip.y * 57.0;
 	return mix(mix(hash(n), hash(n + 1.0), fp.x), mix(hash(n + 57.0), hash(n + 58.0), fp.x), fp.y);
 }
 float cmap(hp vec2 pos){
 	float tot = 0.0, den = stre(1.0 - rain);
 	pos *= 1.6;
-	pos += TOTAL_REAL_WORLD_TIME * 0.001;
+	pos.x += TOTAL_REAL_WORLD_TIME * 0.001;
 	for(int i = 0; i < 4; i++){
 		tot += noise(pos) * den;
 		den *= 0.5;
-		pos *= 2.5;
-		pos += tot;
-		pos += TOTAL_REAL_WORLD_TIME * 0.1;
+		pos *= 2.0;
+		pos.y += pos.y * (0.8 + tot * 0.2);
+		pos.x += TOTAL_REAL_WORLD_TIME * 0.15;
 	}
 	return 1.0 - pow(0.1, max0(1.0 - tot));
 }
@@ -53,23 +54,21 @@ vec3 ACESFitted(vec3 col){
 vec3 colcor(vec3 col){
 	col = ACESFitted(col);
 	col = tg(col);
-	return col;
+	return mix(vec3(length(col)), col, 1.1);
 }
 
 vec3 ccc(){
-	vec3 cloudc = mix(mix(mix(vec3(0.85, 1.0, 1.1), vec3(0.9, 0.6, 0.3), dfog), vec3(0.15, 0.2, 0.29), nfog), FOG_COLOR.rgb * 2.0, rain);
+	vec3 cloudc = mix(mix(mix(vec3(0.85, 1.0, 1.1), vec3(0.9, 0.6, 0.3), dfog), vec3(0.2, 0.3, 0.4), nfog), FOG_COLOR.rgb, rain);
 	return tl(cloudc);
 }
 vec3 csc(hp float skyh){
-	vec3 skyc = mix(mix(mix(vec3(0.2, 0.5, 0.9), vec3(0.065, 0.15, 0.25), nfog), vec3(0.5, 0.4, 0.6), dfog), FOG_COLOR.rgb * 2.0, rain);
-	vec3 scc = mix(mix(mix(vec3(0.75, 0.98, 1.15), vec3(1.0, 0.4, 0.5), dfog), skyc + 0.15, nfog), FOG_COLOR.rgb * 2.0, rain);
+	vec3 skyc = mix(mix(mix(vec3(0.2, 0.52, 0.9), vec3(0.07, 0.16, 0.25), nfog), vec3(0.3, 0.4, 0.5), dfog), FOG_COLOR.rgb, rain);
 		skyc = tl(skyc);
+	vec3 scc = mix(mix(mix(vec3(0.73, 0.98, 1.15), vec3(1.0, 0.5, 0.4), dfog), vec3(0.2, 0.3, 0.4), nfog), FOG_COLOR.rgb, rain);
 		scc = tl(scc);
-		skyc = mix(skyc, scc, skyh);
-	if(FOG_CONTROL.x == 0.0) skyc = tl(FOG_COLOR.rgb * 2.0);
-	return skyc;
+	return mix(skyc, scc, skyh);
 }
 vec3 sr(hp vec3 npos){
-	hp float hor = max0(sqr4(1.0 - max0(abs(npos.y))) + sqr4(1.0 - length(npos.zy)) * 15.0 * dfog);
+	hp float hor = max0(sqr4(1.0 - abs(npos.y)) + sqr4(1.0 - length(npos.zy)) * 15.0 * dfog);
 	return csc(hor);
 }
