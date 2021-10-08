@@ -11,7 +11,7 @@ void main(){
 	hp float zen = max0(ajp.y), cm = cmap(dpos.xz);
 
 	vec4 color = vec4(sr(ajp), sqr5(1.0 - zen));
-		color = mix(color, vec4(ccc(), cm), cm * smoothstep(1.0, 0.95, length(ajp.xz)) * float(zen > 0.0));
+		color = mix(color, vec4(ccc(), 1.0), cm * smoothstep(1.0, 0.95, length(ajp.xz)) * float(zen > 0.0));
 		color.rgb = colcor(color.rgb);
 	gl_FragColor = color;
 }

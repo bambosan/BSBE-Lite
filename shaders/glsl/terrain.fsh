@@ -24,7 +24,7 @@
 	varying float fogr;
 #endif
 
-varying vec4 color;
+varying highp vec4 color;
 #include "util.h"
 
 LAYOUT_BINDING(0) uniform sampler2D TEXTURE_0;
@@ -35,9 +35,8 @@ LAYOUT_BINDING(2) uniform sampler2D TEXTURE_2;
 varying hp vec3 cpos;
 varying hp vec3 wpos;
 
-
 float cwav(hp vec2 pos){
-	hp float wave = noise(pos * 1.5 - TOTAL_REAL_WORLD_TIME) + noise(pos * 2.0 + TOTAL_REAL_WORLD_TIME * 1.3);
+	hp float wave = noise(pos * 1.5  - TOTAL_REAL_WORLD_TIME) + noise(pos * 2.0 + TOTAL_REAL_WORLD_TIME * 1.3);
 	return max0(wave);
 }
 vec3 calcnw(vec3 n){
@@ -51,27 +50,25 @@ vec3 calcnw(vec3 n){
 float fschlick(float f0, hp float ndv){ return f0 + (1.0 - f0) * sqr5(1.0 - ndv); }
 vec4 reflection(vec4 diff, vec3 n, vec3 lsc){
 	hp vec3 rv = reflect(normalize(wpos), n), vdir = normalize(-wpos);
-	float ndv = max0(dot(n, vdir)), zen = max0(rv.y);
+	float ndv = max(0.001, dot(n, vdir)), cvis = smoothstep(1.0, 0.96, length(rv.xz)) * float(rv.y > 0.0);
 	float fresnel = fschlick(0.04, ndv);
 	diff = vec4(diff.rgb, fresnel);
-	vec3 skyc = sr(rv);
-		fresnel = fschlick(0.2, ndv);
-	diff = mix(diff, vec4(skyc + (lsc * 0.5), 1.0), fresnel);
+		fresnel = fschlick(0.3, ndv);
+	diff = mix(diff, vec4(sr(rv) + (lsc * 0.5), 1.0), fresnel);
         rv /= rv.y;
-	diff = mix(diff, vec4(ccc(), 1.0), cmap(rv.xz) * zen * 2.0 * fresnel);
-	hp float ndh = max0(dot(n, normalize(vdir + vec3(-0.98, 0.173, 0.0))));
-         ndh = pow(ndh, 230.0);
-	diff += ndh * vec4(skyc, 1.0) * dfog;
+	diff = mix(diff, vec4(ccc(), 1.0), cmap(rv.xz) * cvis * fresnel);
+	hp float ndh = max(0.001, dot(n, normalize(vdir + vec3(-0.98, 0.173, 0.0))));
+	diff += pow(ndh, 230.0) * vec4(1.0, 0.7, 0.2, 1.0) * dfog * 2.0;
 	diff.rgb *= max(uv1.x, smoothstep(0.8, 1.0, uv1.y) * 0.8 + 0.2);
 	return diff;
 }
 
 vec3 illum(vec3 diff, vec3 n, vec3 lsc, float lmb, bool endw, bool nether){
-	float dusk = min(smoothstep(0.4, 1.0, lmb), smoothstep(1.0, 0.8, lmb)) * (1.0 - rain), night = smoothstep(1.0, 0.2, lmb);
-	float smap = mix(mix(mix(mix(1.0, 0.2, abs(n.x)), 0.0, smoothstep(0.87, 0.845, uv1.y)), 0.0, rain), 1.0, smoothstep(lmb * sqr3(uv1.y), 1.0, uv1.x));
+	float dusk = min(smoothstep(0.4, 1.0, lmb), smoothstep(1.0, 0.6, lmb)) * (1.0 - rain), night = smoothstep(1.0, 0.2, lmb);
+	float smap = mix(mix(mix(mix(1.0, 0.0, abs(n.x)), 0.0, smoothstep(0.87, 0.845, uv1.y)), 0.0, rain), 1.0, smoothstep(lmb * sqr3(uv1.y), 1.0, uv1.x));
 	vec3 almap = mix(mix(mix(mix(vec3(0.3, 0.55, 1.0), vec3(0.0), night), vec3(0.5), rain * (1.0 - night)) * uv1.y, vec3(0.15, 0.1, 0.2), float(endw)), vec3(0.4), float(nether));
 		almap += lsc;
-	vec3 ambc = mix(mix(vec3(1.1, 1.1, 0.9), vec3(1.0, 0.5, 0.0), dusk), vec3(0.05, 0.12, 0.4), night);
+	vec3 ambc = mix(mix(vec3(0.6), vec3(0.7, 0.1, 0.0), dusk), vec3(0.02, 0.08, 0.3), night);
 		almap += (nether || endw) ? vec3(0.0) : ambc * smap;
 	return diff * almap;
 }
@@ -88,6 +85,7 @@ void main(){
 	vec4 diffuse = texture2D(TEXTURE_0, uv0);
 #endif
 
+
 #ifdef SEASONS_FAR
 	diffuse.a = 1.0;
 #endif
@@ -101,7 +99,7 @@ void main(){
 	if(diffuse.a < ALPHA_THRESHOLD) discard;
 #endif
 
-vec4 inColor = color;
+lowp vec4 inColor = color;
 
 #if defined(BLEND)
 	diffuse.a *= inColor.a;
@@ -111,7 +109,9 @@ vec4 inColor = color;
 	#if !USE_ALPHA_TEST && !defined(BLEND)
 		diffuse.a = inColor.a;
 	#endif
-	diffuse.rgb *= (abs(color.r - color.g) < 2e-5 && abs(color.g - color.b) < 2e-5) ? sqrt(inColor.rgb) * 1.2 : normalize(inColor.rgb) * length(sqrt(inColor.rgb));
+
+	diffuse.rgb *= (color.r == color.g && color.g == color.b) ? sqrt(inColor.rgb) * 1.2 : normalize(inColor.rgb) * length(sqrt(inColor.rgb));
+
 #else
 	diffuse.rgb *= mix(vec3(1.0), texture2D(TEXTURE_2, inColor.xy).rgb * 2.0, inColor.b);
 	diffuse.rgb *= inColor.aaa;
@@ -137,7 +137,7 @@ vec4 inColor = color;
 		diffuse.rgb += diffuse.rgb * uv1.x * (1.0 - uv1.y);
 	}
 #ifdef FOG
-	diffuse.rgb = mix(diffuse.rgb, sr(normalize(wpos)), undw ? sqr5(fogr) * 0.8 + 0.2 : fogr);
+	diffuse.rgb = mix(diffuse.rgb, sr(normalize(wpos)), undw ? sqr5(fogr) * 0.87 + 0.13 : fogr);
 #endif
 	diffuse.rgb = colcor(diffuse.rgb);
 
