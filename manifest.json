@@ -2,22 +2,22 @@
     "format_version": 2,
     "metadata": {
         "authors": [ "bambosan" ],
-        "url": "https://github.com/bambosan/bsbe-renewed",
+        "url": "https://github.com/bambosan/BSBE-Renewed",
         "license": "MIT License"
     },
     "header": {
-        "name": "Bicubic Shader BE Renewed 1.1",
-        "description": "a shaders for minecraft be",
-        "uuid": "e12647d9-b7ea-493e-a7f4-7dad52a7d113",
-        "version": [0, 1, 1],
-        "min_engine_version": [1, 14, 1]
+        "name": "Bicubic Shader BE Renewed 1.2",
+        "description": "A shaders for minecraft be",
+        "uuid": "326be821-543c-49da-b4a4-1181894787d5",
+        "version": [0, 1, 2],
+        "min_engine_version": [1, 16, 0]
     },
     "modules": [
         {
-            "description": "a shader for minecraft be",
+            "description": "A shader for minecraft be",
             "type": "resources",
-            "uuid": "006e3db1-4375-4839-ac78-bfeb45571fe7",
-            "version": [0, 1, 1]
+            "uuid": "5dcf11d6-24a3-4de2-bce3-dd649fc91415",
+            "version": [0, 1, 2]
         }
     ]
 }
