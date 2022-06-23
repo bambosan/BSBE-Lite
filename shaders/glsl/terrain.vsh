@@ -48,13 +48,13 @@ void main(){
 	worldPos.xyz = (POSITION.xyz * CHUNK_ORIGIN_AND_SCALE.w) + CHUNK_ORIGIN_AND_SCALE.xyz;
 	// some stuff in here https://github.com/McbeEringi/esbe-3g/tree/master/ESBE_3G/shaders/glsl
 	POS3 ajp = fract(POSITION.xyz * 0.0625) * 16.0, frp = fract(POSITION.xyz);
-	hp float gwave = sin(TOTAL_REAL_WORLD_TIME * 4.0 + ajp.x + ajp.z + ajp.y);
+	highp float gwave = sin(TOTAL_REAL_WORLD_TIME * 4.0 + ajp.x + ajp.z + ajp.y);
 
 	#if !defined(SEASONS) && !defined(ALPHA_TEST)
 		if(COLOR.a < 0.7 && COLOR.a > 0.5) worldPos.y += gwave * 0.05 * fract(POSITION.y);
 	#endif
 	#ifdef ALPHA_TEST
-		if((COLOR.r != COLOR.g && COLOR.g != COLOR.b && frp.y != 0.015625) || (frp.y == 0.9375 && (frp.x == 0.0 || frp.z == 0.0))) worldPos.xyz += gwave * 0.03 * (1.-stre(length(worldPos.xyz) / FAR_CHUNKS_DISTANCE)) * TEXCOORD_1.y;
+		if((COLOR.r != COLOR.g && COLOR.g != COLOR.b && frp.y != 0.015625) || (frp.y == 0.9375 && (frp.x == 0.0 || frp.z == 0.0))) worldPos.xyz += gwave * 0.03 * (1.-saturate(length(worldPos.xyz) / FAR_CHUNKS_DISTANCE)) * TEXCOORD_1.y;
 	#endif
 	if(FOG_CONTROL.x == 0.0) worldPos.xyz += gwave * 0.05;
 	POS4 pos = WORLDVIEW * vec4(worldPos.xyz, 1.0);
@@ -76,6 +76,6 @@ void main(){
 	#ifdef ALLOW_FADE
 		len += RENDER_CHUNK_FOG_ALPHA;
 	#endif
-	fogr = stre((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x));
+	fogr = saturate((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x));
 #endif
 }

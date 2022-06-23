@@ -3,15 +3,14 @@
 #include "uniformPerFrameConstants.h"
 #include "common.glsl"
 
-varying hp vec3 pos;
+varying highp vec3 pos;
 
 void main(){
-	hp vec3 ajp = normalize(vec3(pos.x, -pos.y + 0.128, -pos.z));
-	hp vec3 dpos = ajp / ajp.y;
-	hp float zen = max0(ajp.y), cm = cmap(dpos.xz);
-
-	vec4 color = vec4(sr(ajp), sqr5(1.0 - zen));
-		color = mix(color, vec4(ccc(), 1.0), cm * smoothstep(1.0, 0.95, length(ajp.xz)) * float(zen > 0.0));
-		color.rgb = colcor(color.rgb);
+	highp vec3 ajp = normalize(vec3(pos.x, -pos.y + 0.128, -pos.z));
+	highp vec3 dpos = ajp / ajp.y;
+	highp float cm = cmap(dpos.xz);
+	vec4 color = vec4(sr(ajp), exp(-saturate(ajp.y) * 5.0));
+	color = mix(color, vec4(ccc(), cm), cm * smoothstep(1.0, 0.95, length(ajp.xz)) * step(0.0, ajp.y));
+	color.rgb = colcor(color.rgb);
 	gl_FragColor = color;
 }

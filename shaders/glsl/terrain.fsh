@@ -24,7 +24,7 @@
 	varying float fogr;
 #endif
 
-varying highp vec4 color;
+varying vec4 color;
 #include "util.h"
 
 LAYOUT_BINDING(0) uniform sampler2D TEXTURE_0;
@@ -32,44 +32,47 @@ LAYOUT_BINDING(1) uniform sampler2D TEXTURE_1;
 LAYOUT_BINDING(2) uniform sampler2D TEXTURE_2;
 
 #include "common.glsl"
-varying hp vec3 cpos;
-varying hp vec3 wpos;
+varying highp vec3 cpos;
+varying highp vec3 wpos;
 
-float cwav(hp vec2 pos){
-	hp float wave = noise(pos * 1.5  - TOTAL_REAL_WORLD_TIME) + noise(pos * 2.0 + TOTAL_REAL_WORLD_TIME * 1.3);
-	return max0(wave);
+float cwav(highp vec2 pos){
+	highp float wave = (1.0 - noise(pos * 1.3 - TOTAL_REAL_WORLD_TIME * 1.5)) + noise(pos + TOTAL_REAL_WORLD_TIME);
+	return wave;
 }
 vec3 calcnw(vec3 n){
-	hp float w1 = cwav(cpos.xz), w2 = cwav(vec2(cpos.x - 0.015, cpos.z)), w3 = cwav(vec2(cpos.x, cpos.z - 0.015));
-	vec3 wn = normalize(vec3(w1 - w2, w1 - w3, 1.0)) * 0.5 + 0.5;
-		wn = wn * 2.0 - 1.0;
-	mat3 ftbn = mat3(abs(n.y) + n.z, 0.0, n.x, 0.0, 0.0, n.y, -n.x, n.y, n.z);
-	return normalize(wn * ftbn);
+	highp float w1 = cwav(cpos.xz), w2 = cwav(vec2(cpos.x - 0.02, cpos.z)), w3 = cwav(vec2(cpos.x, cpos.z - 0.02));
+	highp float dx = w1 - w2, dy = w1 - w3;
+	vec3 wn = normalize(vec3(dx, dy, 1.0)) * 0.5 + 0.5;
+	mat3 tbn = mat3(abs(n.y) + n.z, 0.0, n.x, 0.0, 0.0, n.y, -n.x, n.y, n.z);
+	wn = wn * 2.0 - 1.0;
+	wn = normalize(wn * tbn);
+	return wn;
 }
-
-float fschlick(float f0, hp float ndv){ return f0 + (1.0 - f0) * sqr5(1.0 - ndv); }
-vec4 reflection(vec4 diff, vec3 n, vec3 lsc){
-	hp vec3 rv = reflect(normalize(wpos), n), vdir = normalize(-wpos);
-	float ndv = max(0.001, dot(n, vdir)), cvis = smoothstep(1.0, 0.96, length(rv.xz)) * float(rv.y > 0.0);
-	float fresnel = fschlick(0.04, ndv);
-	diff = vec4(diff.rgb, fresnel);
-		fresnel = fschlick(0.3, ndv);
-	diff = mix(diff, vec4(sr(rv) + (lsc * 0.5), 1.0), fresnel);
-        rv /= rv.y;
-	diff = mix(diff, vec4(ccc(), 1.0), cmap(rv.xz) * cvis * fresnel);
-	hp float ndh = max(0.001, dot(n, normalize(vdir + vec3(-0.98, 0.173, 0.0))));
-	diff += pow(ndh, 230.0) * vec4(1.0, 0.7, 0.2, 1.0) * dfog * 2.0;
-	diff.rgb *= max(uv1.x, smoothstep(0.8, 1.0, uv1.y) * 0.8 + 0.2);
+float fschlick(float f0, highp float ndv){
+	return f0 + (1.0 - f0) * sqr5(1.0 - ndv);
+}
+vec4 reflection(vec3 n, vec3 lsc){
+	highp vec3 rv = reflect(normalize(wpos), n), vdir = normalize(-wpos);
+	highp float ndv = max0(dot(n, vdir)), zen = max0(rv.y) * 1.2;
+	highp float fresnel = fschlick(0.5, ndv);
+	vec4 diff = vec4(0.1);
+	vec3 skyc = sr(rv);
+	diff = mix(diff, vec4(skyc + (lsc * 0.5), 1.0), fresnel);
+	rv = rv / rv.y;
+	diff = mix(diff, vec4(ccc(), 1.0), cmap(rv.xz) * zen * fresnel);
+	highp float ndh = max0(dot(n, normalize(vdir + vec3(-0.98, 0.173, 0.0))));
+	diff += pow(ndh, 230.0) * vec4(skyc, 1.0) * dfog;
+	diff.rgb *= max(uv1.x, smoothstep(0.845, 1.0, uv1.y));
 	return diff;
 }
-
-vec3 illum(vec3 diff, vec3 n, vec3 lsc, float lmb, bool endw, bool nether){
-	float dusk = min(smoothstep(0.4, 1.0, lmb), smoothstep(1.0, 0.6, lmb)) * (1.0 - rain), night = smoothstep(1.0, 0.2, lmb);
-	float smap = mix(mix(mix(mix(1.0, 0.0, abs(n.x)), 0.0, smoothstep(0.87, 0.845, uv1.y)), 0.0, rain), 1.0, smoothstep(lmb * sqr3(uv1.y), 1.0, uv1.x));
-	vec3 almap = mix(mix(mix(mix(vec3(0.3, 0.55, 1.0), vec3(0.0), night), vec3(0.5), rain * (1.0 - night)) * uv1.y, vec3(0.15, 0.1, 0.2), float(endw)), vec3(0.4), float(nether));
-		almap += lsc;
-	vec3 ambc = mix(mix(vec3(0.6), vec3(0.7, 0.1, 0.0), dusk), vec3(0.02, 0.08, 0.3), night);
-		almap += (nether || endw) ? vec3(0.0) : ambc * smap;
+vec3 illum(vec3 diff, vec3 n, vec3 lsc, float lmb){
+	highp float dusk = min(smoothstep(0.3, 0.5, lmb), smoothstep(1.0, 0.8, lmb)) * (1.0 - rain), night = saturate(smoothstep(1.0, 0.2, lmb) * 1.5);
+	highp float smap = mix(mix(mix(1.0, 0.2, saturate(abs(n.x))), 0.0, smoothstep(0.87, 0.845, uv1.y)), 0.0, rain);
+	smap = mix(smap, 1.0, smoothstep(lmb * uv1.y, 1.0, uv1.x));
+	vec3 almap = mix(mix(vec3(0.3, 0.55, 1.0), vec3(0.0), night), vec3(0.5), rain * (1.0 - night)) * uv1.y;
+	almap += lsc;
+	vec3 ambc = mix(mix(vec3(1.1, 1.1, 0.8), vec3(1.0, 0.5, 0.0), dusk), vec3(0.05, 0.15, 0.4), night) * smap;
+	almap += ambc;
 	return diff * almap;
 }
 
@@ -85,7 +88,6 @@ void main(){
 	vec4 diffuse = texture2D(TEXTURE_0, uv0);
 #endif
 
-
 #ifdef SEASONS_FAR
 	diffuse.a = 1.0;
 #endif
@@ -99,7 +101,7 @@ void main(){
 	if(diffuse.a < ALPHA_THRESHOLD) discard;
 #endif
 
-lowp vec4 inColor = color;
+vec4 inColor = color;
 
 #if defined(BLEND)
 	diffuse.a *= inColor.a;
@@ -109,35 +111,37 @@ lowp vec4 inColor = color;
 	#if !USE_ALPHA_TEST && !defined(BLEND)
 		diffuse.a = inColor.a;
 	#endif
-
-	diffuse.rgb *= (color.r == color.g && color.g == color.b) ? sqrt(inColor.rgb) * 1.2 : normalize(inColor.rgb) * length(sqrt(inColor.rgb));
-
+	diffuse.rgb *= (inColor.r != inColor.g && inColor.g != inColor.b) ? normalize(inColor.rgb) * length(sqrt(inColor.rgb)) : sqrt(inColor.rgb) * 1.2;
 #else
 	diffuse.rgb *= mix(vec3(1.0), texture2D(TEXTURE_2, inColor.xy).rgb * 2.0, inColor.b);
 	diffuse.rgb *= inColor.aaa;
 	diffuse.a = 1.0;
 #endif
-
 	diffuse.rgb = tl(diffuse.rgb);
-	highp vec3 lmb = texture2D(TEXTURE_1, vec2(0, 1)).rgb;
 
-	bool waterd = false, endw = lmb.r >= 0.4 && lmb.r <= 0.5 && lmb.g >= 0.5 && lmb.g < 0.6 && lmb.b >= 0.4 && lmb.b < 0.5, nether = FOG_CONTROL.x > 0.0 && FOG_CONTROL.x <= 0.06 && FOG_CONTROL.y >= 0.5 && FOG_CONTROL.y <= 0.55, undw = FOG_CONTROL.x == 0.0;
+	bool waterd = false;
 #if !defined(SEASONS) && !defined(ALPHA_TEST)
 	waterd = inColor.a < 0.7 && inColor.a > 0.5;
 #endif
 
 	vec3 n = normalize(cross(dFdx(cpos.xyz), dFdy(cpos.xyz)));
-	if(waterd) n = calcnw(n);
-	float bls = max(uv1.x * smoothstep(lmb.r * sqr3(uv1.y), 1.0, uv1.x), uv1.x * rain * uv1.y);
-	vec3 lsc = endw ? vec3(0.6, 0.2, 0.0) * (sqr3(uv1.x) + sqr5(uv1.x)) : vec3(1.0, 0.4, 0.0) * bls + sqr5(bls);
-	diffuse.rgb = illum(diffuse.rgb, n, lsc, lmb.r, endw, nether);
-
-	if(waterd) diffuse = reflection(diffuse, n, lsc); else if(undw){
-		diffuse.rgb += diffuse.rgb * cwav(cpos.xz) * uv1.y;
-		diffuse.rgb += diffuse.rgb * uv1.x * (1.0 - uv1.y);
+	float lmb = texture2D(TEXTURE_1, vec2(0, 1)).r;
+	float bls = max(uv1.x * smoothstep(lmb * uv1.y, 1.0, uv1.x), uv1.x * rain * uv1.y);
+	vec3 lsc = vec3(1.0, 0.35, 0.0) * bls + sqr5(bls);
+	diffuse.rgb = illum(diffuse.rgb, n, lsc, lmb);
+	if(waterd){
+		n = calcnw(n);
+		diffuse = reflection(n, lsc);
 	}
+	if(FOG_CONTROL.x == 0.0){
+		highp float caus = cwav(cpos.xz);
+		if(!waterd) diffuse.rgb = vec3(0.3, 0.6, 1.0) * diffuse.rgb + diffuse.rgb * max0(caus) * uv1.y;
+		diffuse.rgb += diffuse.rgb * (uv1.x * uv1.x) * (1.0 - uv1.y);
+	}
+	vec3 newfc = sr(normalize(wpos));
+	diffuse.rgb = mix(diffuse.rgb, newfc, saturate(length(wpos) * (0.001 + 0.005 * rain)));
 #ifdef FOG
-	diffuse.rgb = mix(diffuse.rgb, sr(normalize(wpos)), undw ? sqr5(fogr) * 0.87 + 0.13 : fogr);
+	diffuse.rgb = mix(diffuse.rgb, newfc, fogr);
 #endif
 	diffuse.rgb = colcor(diffuse.rgb);
 
