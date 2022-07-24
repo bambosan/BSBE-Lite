@@ -91,7 +91,6 @@
       max-width: 95%;
       margin-bottom: 10px;
       padding: 10px;
-      line-height: 25px;
       background-color: var(--acc);
       animation-name: anim1;
       animation-duration: 2s
@@ -102,6 +101,7 @@
     #box ul{ margin-left: 20px; font-size: 1em }
     #box:last-of-type{ line-height: 35px; }
     #box:last-of-type a{ font-size: 1.2em }
+    #clh { line-height: 25px }
     footer{ padding: 50px 0 20px 0 }
     @media (max-width: 850px){ #con{ width: 90vw } }
     @media (max-width: 658px){
@@ -134,11 +134,7 @@
   </style>
   <script>
     const loadd = async() => { return (await (await fetch("https://api.github.com/repos/bambosan/BSBE-Lite/releases")).json()) }
-    loadd().then(res => {
-      uinfo.innerHTML = (res[0].assets[0].updated_at).slice(0,10);
-      fsize.innerHTML = (Math.round(((res[0].assets[0].size)/1e6)*1e3)/1e3)+" MB";
-      dcount.innerHTML = res[0].assets[0].download_count;
-    })
+    loadd().then(res => { uinfo.innerHTML = (res[0].assets[0].updated_at).slice(0,10); })
   </script>
 </head>
 <body>
@@ -193,7 +189,7 @@ void main(){
   <div id="con">
     <p id="tith">BSBE Lite</p>
     <div id="box">
-      <p>A Shader/Renderdragon Materials for Minecraft: Bedrock Edition that aims to be beautiful look with colorful tones and some features like underwater caustic, 2D cloud, water reflection, water bump, etc.</p><br>
+      <p id="clh">A Shader/Renderdragon Materials for Minecraft: Bedrock Edition that aims to be beautiful look with colorful tones and some features like underwater caustic, 2D cloud, water reflection, water bump, etc.</p><br>
       <div class="swiper mySwiper">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide"><img src="./pic/ss1.jpg" alt="mirai-shaders-be"></div>
@@ -215,18 +211,19 @@ void main(){
     <br><br>
     <p id="he2">Changelog</p><hr><br>
     <div id="box">
-      <ul>
+      <ul id="clh">
 				<li>minor improvements and optimizations</li>
         <li>added Minecraft vanilla AO</li>
-				<li>now this shader is only support MCBE with Renderdragon engine</li>
+        <li>added support for MCBE's Windows and iOS versions</li>
+				<li>now this shader only supports MCBE with the Renderdragon engine</li>
 			</ul>
     </div>
     <br><br>
     <p id="he2">Note</p><hr><br>
     <div id="box">
-      <ul>
-				<li>Don't reupload the file. If you want to share it, just use this github page link</li>
-				<li>Don't make this github page or download link as a shortlink with some payment method activated on that.</li>
+      <ul id="clh">
+				<li>Don't reupload the file. If you want to share it, just use this github page link !</li>
+				<li>Don't make this github page or download link as a shortlink or something like that, with some payment method activated on that !</li>
 			</ul>
     </div>
     <br><br>
@@ -238,18 +235,23 @@ void main(){
     <br><br>
     <p id="he2">Download</p><hr><br>
     <div id="box">
+      <p>Latest Update: <span id="uinfo"></span> Version 1.3</p><br>
       <p>Resourcepack</p>
       <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RP.mcpack"><i class="fas fa-download"></i> Download</a>
       <br><br>
-      <p>Renderdragon Materials</p>
-      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/Android.zip"><i class="fas fa-download"></i> Download</a>
+      <p>Renderdragon Materials:</p>
+      <p>Android</p>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-Android.zip"><i class="fas fa-download"></i> Download</a>
       <br><br>
-      <p>
-        Latest Update : <span id="uinfo"></span> Version 1.3<br>
-        File Size : <span id="fsize"></span><br>
-        Download Count : <span id="dcount"></span>
-      </p><br>
-      <a id="ah" href="https://youtu.be/XbtFd6DrDM8">How To Install? click this!</a>
+      <p>iOS</p>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-iOS.zip"><i class="fas fa-download"></i> Download</a>
+      <br><br>
+      <p>Windows</p>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-Windows.zip"><i class="fas fa-download"></i> Download</a>
+      <br><br>
+      <a href="https://youtu.be/XbtFd6DrDM8" target="_blank"><u>How To Install on Android</u></a><br>
+      <a href="https://youtu.be/fVxb543A8LE?t=80" target="_blank"><u>How To Install on iOS</u></a><br>
+      <a href="https://youtu.be/qe7m0YRGHs8?t=280" target="_blank"><u>How To Install on Windows</u></a>
     </div>
     <br><br>
     <!-- horadunit -->
@@ -260,9 +262,11 @@ void main(){
     <br><br>
     <p id="he2">Credits</p><hr><br>
     <div id="box">
-      <p>Thanks to<br>
-      <a href="https://mobile.twitter.com/RinInReal"> <u>Rinloid</u></a> for helping me with compiling material files</p>
-      <a href="https://github.com/ddf8196"> <u>ddf8196</u></a> for making awesome tools that make everything possible</p>
+      <p id="clh">Thanks to<br>
+        <a href="https://github.com/ddf8196" target="_blank"> <u>ddf8196</u></a> for making awesome tools that make this thing possible<br>
+        <a href="https://mobile.twitter.com/RinInReal" target="_blank"> <u>Rinloid</u></a> for helping me compiling material files and test it<br>
+        <a href="https://mobile.twitter.com/Elsacha12054186" target="_blank"><u> Elsa</u> for testing material files</a>
+      </p>
     </div>
     <br><br>
     <p id="he2">See My Activity on</p><hr><br>
