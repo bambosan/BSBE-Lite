@@ -1,23 +1,18 @@
 {
     "format_version": 2,
-    "metadata": {
-        "authors": [ "bambosan" ],
-        "url": "https://github.com/bambosan/BSBE-Lite",
-        "license": "MIT License"
-    },
     "header": {
-        "name": "BSBE Lite RP",
+        "name": "BSBE RD Material Support",
         "description": "Additional resource pack for BSBE RenderDragon materials that enables cubemap shading and custom vertex color",
-        "uuid": "66a1628d-d035-4a5e-af0a-03a2b28e1449",
-        "version": [0, 1, 3],
+        "uuid": "c737a346-6ba5-4559-86e8-0856574930e3",
+        "version": [0, 1, 4],
         "min_engine_version": [1, 18, 30]
     },
     "modules": [
         {
             "description": "Additional resource pack for BSBE RenderDragon materials that enables cubemap shading and custom vertex color",
             "type": "resources",
-            "uuid": "bc4edae0-9398-4ec1-a3f6-78cf678b0846",
-            "version": [0, 1, 3]
+            "uuid": "1585e203-99e7-436e-ab26-19633460722c",
+            "version": [0, 1, 4]
         }
     ]
 }

@@ -2,7 +2,7 @@ $input a_color0, a_position, a_texcoord0, a_texcoord1
 #ifdef INSTANCING
     $input i_data0, i_data1, i_data2, i_data3
 #endif
-$output v_color0, v_fog, v_texcoord0, v_lightmapUV, wpos, cpos
+$output v_color0, v_fog, v_texcoord0, v_lightmapUV, worldPosi, chunkPos, frameTime, fogControl
 
 #include <bgfx_shader.sh>
 
@@ -45,7 +45,9 @@ void main() {
     v_lightmapUV = a_texcoord1;
     v_color0 = color;
     v_fog = fogColor;
-    wpos = worldPos;
-    cpos = a_position.xyz;
+    worldPosi = worldPos;
+    chunkPos = a_position.xyz;
+    frameTime = ViewPositionAndTime.w;
+    fogControl = FogAndDistanceControl.xy;
     gl_Position = mul(u_viewProj, vec4(worldPos, 1.0));
 }
