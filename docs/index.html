@@ -16,7 +16,7 @@
       --anc: #dfdfdf;
       --aac: red;
       --bgc: linear-gradient(rgb(18, 28, 53), rgb(61, 69, 104));
-      --acc: #222222;
+      --acc: #22222294;
       --hrc: #9a92aa;
       margin: 0;
       padding: 0
@@ -123,13 +123,14 @@
         height: 100%;
         object-fit: cover
     }
-    canvas{
+    #bg{
       position: fixed;
       top:0;
       left:0;
       width: 100%;
       height: 100vh;
-      z-index:-1
+      z-index:-1;
+      background: var(--bgc);
     }
   </style>
   <script>
@@ -138,54 +139,7 @@
   </script>
 </head>
 <body>
-  <canvas id="sky"></canvas>
-  <script>
-    const main=new PetitGL(sky,[0,0,0,1])
-      .resize(innerWidth, innerHeight)
-      .att([
-        {name:'_uv',data:[-1,-1, 1,-1, -1,1, 1,1],slice:2}
-      ])
-      .ibo([
-        {name:'ibo',data:[0,1,2, 3,2,1]}
-      ])
-      .compile(
-        'test',
-        `attribute vec2 UV;
-void main(){ gl_Position=vec4(UV,0,1);}`,
-        `precision highp float;
-uniform float time;
-uniform vec2 res;
-
-vec2 rand22(vec2 p){
-  p = vec2(dot(p,vec2(12.9898,78.233)),dot(p,vec2(26.65125,83.054543)));
-  return fract(sin(p)*43758.5453);
-}
-float stars(vec2 p){
-  p *= 1024.;
-  float d = 1.e10;
-  for(float i=-1.; i<=1.; i+=1.){for(float j=-1.; j<=1.; j+=1.){
-    vec2 g = floor(p)+vec2(i,j);
-    g = floor(p)-g-rand22(mod(g,res))+fract(sin(dot(g.xy,vec2(54.90898,18.233)))*4337.5453);g*=1.25;
-    d = min(d,dot(g,g));
-  }}
-  return 2.*(smoothstep(.95,1.,(1.-sqrt(d))));
-}
-void main(){
-  vec2 c = gl_FragCoord.xy/res;c.x *= res.x/res.y;
-  gl_FragColor = mix(vec4(.24,.27,.41,1),vec4(0.07,0.11,0.21,1),c.y)+vec4(vec3(stars(c+time*1e-4)),1);
-}`
-      )
-      .defAtt('test',['UV'])
-      .defUni('test',['time','res']),loop=()=>{ requestAnimationFrame(loop);
-        main.uni('test',
-        [
-				  {loc:'time',data:[(Date.now()*.001)%86400-43200],type:'f'},
-				  {loc:'res',data:[main.c.width,main.c.height],type:'f'}
-			  ]
-        ).draw('test',[{loc:'UV',att:'_uv'}],'ibo').flush();
-      };
-    loop();
-  </script>
+  <div id="bg"></div>
   <div id="con">
     <p id="tith">BSBE Lite</p>
     <div id="box">
@@ -202,36 +156,27 @@ void main(){
 				<div class="swiper-button-prev" style="color: #dfdfdf"></div>
 			</div>
     </div>
-    <br><br>
-    <!-- horadunit -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <br><br>
-    <p id="he2">Changelog</p><hr><br>
+    <br>
+    <br>
+    <p id="he2">Changelog</p>
     <div id="box">
       <ul id="clh">
 				<li>new tonemap</li>
         <li>fix nether and endworld become very dark</li>
 			</ul>
     </div>
-    <br><br>
-    <p id="he2">Note</p><hr><br>
+    <br>
+    <br>
+    <p id="he2">Note</p>
     <div id="box">
       <ul id="clh">
 				<li>Don't reupload the file. If you want to share it, just use this github page link !</li>
 				<li>Don't make this github page or download link as a shortlink or something like that, with some payment method activated on that !</li>
 			</ul>
     </div>
-    <br><br>
-    <!-- horadunit -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <br><br>
-    <p id="he2">Download</p><hr><br>
+    <br>
+    <br>
+    <p id="he2">Download</p>
     <div id="box">
       <p>Latest Update: <span id="uinfo"></span> Version 1.4</p><br>
       <p>Resourcepack</p>
@@ -251,21 +196,17 @@ void main(){
       <a href="https://youtu.be/fVxb543A8LE?t=80" target="_blank"><u>How To Install on iOS</u></a><br>
       <a href="https://youtu.be/qe7m0YRGHs8?t=280" target="_blank"><u>How To Install on Windows</u></a>
     </div>
-    <br><br>
-    <!-- horadunit -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <br><br>
-    <p id="he2">Credits</p><hr><br>
+    <br>
+    <br>
+    <p id="he2">Credits</p>
     <div id="box">
       <p id="clh">Thanks to<br>
         <a href="https://github.com/ddf8196" target="_blank"> <u>ddf8196</u></a> for making awesome tools that make this thing possible<br>
       </p>
     </div>
-    <br><br>
-    <p id="he2">See My Activity on</p><hr><br>
+    <br>
+    <br>
+    <p id="he2">See My Activity on</p>
     <div id="box">
       <a href="https://github.com/bambosan" target="_blank"><i class="fab fa-github"></i> Github</a>
       <br>
@@ -274,9 +215,14 @@ void main(){
       <a href="https://www.youtube.com/channel/UCVhl5xGvRnlbIrb6K3CmCHA" target="_blank"><i class="fab fa-youtube" target="_blank"></i> YouTube</a>
     </div>
     <footer>
-      bambosan 2022<br>background rendered with <a href="https://mcbeeringi.github.io/petitgl/"><u>PetitGL</u></a> by <a href="https://twitter.com/mcbeeringi/"><u>McbeEringi</u></a>
+      bambosan 2022
     </footer>
   </div>
+  <!-- horadunit -->
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<script>
 	  var swiper = new Swiper(".mySwiper", {
