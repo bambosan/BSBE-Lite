@@ -19,34 +19,6 @@
       margin: 0;
       padding: 0
     }
-    @keyframes anim1{
-      from{
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to{
-        opacity: 1;
-        transform: translateY(0px);
-      }
-    }
-    @keyframes anim2{
-      from{
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      to{
-        opacity: 1;
-        transform: translateX(0px);
-      }
-    }
-    @keyframes anim3{
-      from{
-        width: 0;
-      }
-      to{
-        width: 100%;
-      }
-    }
     body{
       font-family:'Open Sans';
       color: var(--fgc);
@@ -62,9 +34,6 @@
         height: 100%;
         padding: 5px
     }
-    ul{
-      padding-left: 20px;
-    }
     a:hover{ color: var(--aac) }
     #con{
       text-align: center;
@@ -72,34 +41,15 @@
       padding: 0 0 20px;
       width: 70vw
     }
-    #tith{
+    #he1{
       margin: 150px 0 30px 0;
       font-size: 2.7em;
-      line-height: 20px;
-      animation-name: anim2;
-      animation-duration: 0.5s
+      line-height: 20px
     }
-    #tith #abo{ font-size: 16px; line-height: 0 }
     #he2{
       margin-bottom: 5px;
-      font-size: 1.8em;
-      animation-name: anim2;
-      animation-duration: 0.5s
+      font-size: 1.8em
     }
-    #box{
-      display: inline-block;
-      max-width: 95%;
-      margin-bottom: 10px;
-      padding: 10px;
-      animation-name: anim1;
-      animation-duration: 2s
-    }
-    #box #ah{ font-size: 1.5em }
-    #bos a{ font-size: 1em }
-    #box p{ font-size: 1em }
-    #box ul{ margin-left: 20px; font-size: 1em }
-    #box:last-of-type{ line-height: 35px; }
-    #box:last-of-type a{ font-size: 1.2em }
     #clh { line-height: 25px }
     footer{ padding: 50px 0 20px 0 }
     @media (max-width: 850px){ #con{ width: 90vw } }
@@ -110,10 +60,8 @@
         padding: 5px 0 5px 0
       }
       #con{ width: 90vw }
-      #tith{ margin: 70px 0 30px 0; font-size: 2.3em }
-      #tith #abo{ font-size: 14px; line-height: 0 }
+      #he1{ margin: 70px 0 30px 0; font-size: 2.3em }
       #he2{ font-size: 1.5em }
-      #box a{ font-size: 1.2em }
     }
     @media (max-width: 500px){
       #con{
@@ -131,15 +79,11 @@
       background: var(--bgc);
     }
   </style>
-  <script>
-    const loadd = async() => { return (await (await fetch("https://api.github.com/repos/bambosan/BSBE-Lite/releases")).json()) }
-    loadd().then(res => { uinfo.innerHTML = (res[0].assets[0].updated_at).slice(0,10); })
-  </script>
 </head>
 <body>
   <div id="bg"></div>
   <div id="con">
-    <header id="tith">BSBE Lite</header>
+    <header id="he1">BSBE Lite</header>
     <p>The Lite version of Bicubic Shaders BE</p>
     <br>
     <img src="./pic/ss1.jpg" alt="BSBE Lite">
@@ -153,11 +97,9 @@
     <p id="clh">New Tonemap<br>Fix Nether and Endworld become very dark<br>Fix Cloud and Sky reflection appear in indoor</p>
     <br>
     <br>
-
     <!-- horadunit -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    
     <br>
     <br>
     <header id="he2">Warning</header>
@@ -165,25 +107,30 @@
     <br>
     <br>
     <p id="he2">Download</p>
-    <p>Latest Version 1.4</p>
-    <br>
-    <p>Resource Pack
-    <br>
-    BSBE RD Material Support</p>
-    <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-RD-Material-Support.mcpack"><i class="fas fa-download"></i> Download</a>
-    <br>
-    <br>
-    <p>Renderdragon Materials:<br>
-    Android</p>
-    <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Android.zip"><i class="fas fa-download"></i> Download</a>
-    <br>
-    <br>
-    <p>iOS</p>
-    <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-iOS.zip"><i class="fas fa-download"></i> Download</a>
-    <br>
-    <br>
-    <p>Windows</p>
-    <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Windows.zip"><i class="fas fa-download"></i> Download</a>
+    <p>Latest Version 1.4
+      <br>
+      Resource Pack
+      <br>
+      BSBE RD Material Support
+      <br>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-RD-Material-Support.mcpack"><i class="fas fa-download"></i> Download</a>
+      <br>
+      <br>
+      Renderdragon Materials:<br>
+      Android
+      <br>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Android.zip"><i class="fas fa-download"></i> Download</a>
+      <br>
+      <br>
+      iOS
+      <br>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-iOS.zip"><i class="fas fa-download"></i> Download</a>
+      <br>
+      <br>
+      Windows
+      <br>
+      <a id="ah" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Windows.zip"><i class="fas fa-download"></i> Download</a>
+    </p>
     <br>
     <br>
     <a href="https://youtu.be/XbtFd6DrDM8" target="_blank"><u>How To Install on Android</u></a>
@@ -194,14 +141,12 @@
     <br>
     <br>
     <br>
-    
     <!-- horadunit -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8231611512488101" data-ad-slot="4141086993" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
     <br>
     <br>
-    <p id="he2">Credits</p>
+    <header id="he2">Credits</header>
     <p>Thanks to<br><a href="https://github.com/ddf8196" target="_blank"> <u>ddf8196</u></a><br>for making awesome tools that make this thing possible<br>
     </p>
     <br>
@@ -216,27 +161,5 @@
     </p>
     <footer>bambosan 2022</footer>
   </div>
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-	<script>
-	  var swiper = new Swiper(".mySwiper", {
-      spaceBetween: 5,
-      centeredSlides: true,
-			loop: true,
-			autoplay: {
-				delay: 2000,
-				disableOnInteraction: true
-			},
-			navigation: {
-				nextEl: ".swiper-button-next",
-				prevEl: ".swiper-button-prev"
-			},
-      breakpoints: {
-        700: {
-          spaceBetween: 20,
-          slidesPerView: 2
-        }
-      }
-    });
-	</script>
 </body>
 </html>
