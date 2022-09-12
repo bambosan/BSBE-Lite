@@ -29,6 +29,7 @@
         background: linear-gradient(#282c34b9, #282c34b9), url("./pic/back.jpg") no-repeat;
         background-size: cover
       }
+      thead{ border: none }
       .col-8-md{ padding: 20px 0 }
       .swiper-slide img{
         display: block;
@@ -36,7 +37,6 @@
         height: 100%;
         object-fit: cover
       }
-      thead{ border: none }
       @media (min-width: 600px){ .col-8-md{ padding: 20px } }
     </style>
   </head>
@@ -81,11 +81,14 @@
     </div>
     <div class="row is-marginless is-center">
       <div class="col-9">
-        <h2><b>Changelog</b> <span style="font-size: 1.6rem">v 1.3 to 1.4</span></h2>
+        <h2><b>Changelog</b> <span style="font-size: 1.6rem">version 1.4 to 1.5</span></h2>
         <ul>
-          <li>New tonemapping</li>
-          <li>Fix nether and endworld become very dark</li>
-          <li>Fix sky and cloud reflection visible in indoor</li>
+          <li>Added glowing ores</li>
+          <li>Added vanilla water version</li>
+          <li>Fix wrong direction of the normal map on DirectX (Windows version)</li>
+          <li>Fix overbright torch lighting and some block light sources</li>
+          <li>Reduce the amount of underwater fog</li>
+          <li>Reduce the brightness of ambient light in overworld, nether, and endworld</li>
         </ul>
         <hr style="margin: 0; background-color: #656970">
       </div>
@@ -95,7 +98,7 @@
         <h2><b>Warning</b></h2>
         <ul>
           <li>From version 1.2-Latest only works for <b>Minecraft: Bedrock Edition with Renderdragon engine</b></li>
-          <li>Install the resoucepack <b>BSBE RD Material support</b> for activate some features especially cloud and water detection</li>
+          <li><b style="color: var(--color-onedark4)">Install the resourcepack</b> <b>BSBE RD Material support</b> for activate glowing ores, cloud, and water detection</li>
           <li><b style="color: var(--color-onedark2)">You're not allowed</b> to use/copy some code in these shaders until you have read the <a href="https://github.com/bambosan/BSBE-Lite/blob/dev/LICENSE"><u>LICENSE</u></a></li>
           <li><b style="color: var(--color-onedark2)">You're not allowed</b> to re-upload the files or re-link this site as monetized URL shorteners or something like that</li>
         </ul>
@@ -113,9 +116,9 @@
       <div class="col-9 text-center">
         <h2><b>Downloads</b></h2>
         <h4>BSBE RD Material support</h4>
-        <a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-RD-Material-Support.mcpack"><b>Download</b></a>
+        <a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-RD-Material-Support.mcpack"><b>Download</b></a>
         <br><br>
-        <h4>Renderdragon materials<br>Latest Version 1.4</h4>
+        <h4>Renderdragon materials<br>Latest Version 1.5</h4>
         <table>
           <thead>
             <tr class="text-center">
@@ -126,14 +129,14 @@
           </thead>
           <tbody>
             <tr class="text-center">
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Android-1.4.zip"><b>Download</b></a></td>
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-iOS-1.4.zip"><b>Download</b></a></td>
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.4/BSBE-Lite-RD-Material-Windows-1.4.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-Android-1.5.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-iOS-1.5.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-Windows-1.5.zip"><b>Download</b></a></td>
             </tr>
           </tbody>
         </table>
         <br>
-        <h4>Previous Version<br>Version 1.3</h4>
+        <h4>Latest Version 1.5 <small><br>with vanilla water</small></h4>
         <table>
           <thead>
             <tr class="text-center">
@@ -144,25 +147,22 @@
           </thead>
           <tbody>
             <tr class="text-center">
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-Android-1.3.zip"><b>Download</b></a></td>
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-iOS-1.3.zip"><b>Download</b></a></td>
-              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.3/BSBE-Lite-RD-Material-Windows-1.3.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-NoWater-Android-1.5.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-NoWater-iOS-1.5.zip"><b>Download</b></a></td>
+              <td><a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.5/BSBE-Lite-RD-Material-NoWater-Windows-1.5.zip"><b>Download</b></a></td>
             </tr>
           </tbody>
         </table>
-        <h4>Version 1.2<br>Android</h4>
-        <a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.2/BSBE-Lite-RD-Material-Android-1.2.zip"><b>Download</b></a>
-        <br><br>
-        <h4>Version 1.0<br>for legacy MCBE renderer engine</h4>
-        <a class="button primary" href="https://github.com/bambosan/BSBE-Lite/releases/download/1.0/BSBE-Lite-1.0.mcpack"><b>Download</b></a>
-        <br><br>
+        <br>
+        <a class="button clear" href="https://github.com/bambosan/BSBE-Lite/releases"><u>Previous version</u></a>
+        <br>
         <a class="button clear" href="https://github.com/bambosan/BSBE-Lite"><u>See the source</u></a>
         <hr style="margin: 2rem 0; background-color: #656970">
       </div>
     </div>
     <div class="row is-marginless is-center">
       <div class="col-10 text-center">
-        <h2><b>Some Screenshot</b></h2>
+        <h2><b>Some Screenshots</b></h2>
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide"><img src="./pic/ss1.jpg" alt="BSBE Lite"></div>
@@ -171,6 +171,10 @@
             <div class="swiper-slide"><img src="./pic/ss4.jpg" alt="BSBE Lite"></div>
             <div class="swiper-slide"><img src="./pic/ss5.jpg" alt="BSBE Lite"></div>
             <div class="swiper-slide"><img src="./pic/ss6.jpg" alt="BSBE Lite"></div>
+            <div class="swiper-slide"><img src="./pic/ss7.jpg" alt="BSBE Lite"></div>
+            <div class="swiper-slide"><img src="./pic/ss8.jpg" alt="BSBE Lite"></div>
+            <div class="swiper-slide"><img src="./pic/ss9.jpg" alt="BSBE Lite"></div>
+            <div class="swiper-slide"><img src="./pic/ss10.jpg" alt="BSBE Lite"></div>
           </div>
           <div class="swiper-scrollbar"></div>
         </div>
@@ -191,7 +195,7 @@
       <div class="col-9 text-center">
         <h2><b>Credits</b></h2>
         <p>
-          Minecraft is trademark of Mojang and this developer & sites is not affiliated with Mojang or Microsoft
+          Renderdragon Materials (Minecraft) is trademark of Mojang and this sites is not affiliated with Mojang or Microsoft
           <br>
           Thanks to <a href="https://github.com/ddf8196"><u>ddf8196</u></a> for making awesome tools that making this thing possible
         </p>
