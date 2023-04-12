@@ -1,18 +1,18 @@
 {
     "format_version": 2,
     "header": {
-        "name": "BSBE RD Material Support",
-        "description": "Additional resource pack for BSBE RenderDragon materials that enables cubemap shading and custom vertex color",
-        "uuid": "c737a346-6ba5-4559-86e8-0856574930e3",
-        "version": [0, 1, 4],
-        "min_engine_version": [1, 18, 30]
+        "name": "BSBE Lite 1.6",
+        "description": "A shader for minecraft be",
+        "uuid": "e67b335f-edbb-408c-9b1f-a7313e87c0f2",
+        "version": [0, 1, 6],
+        "min_engine_version": [1, 18, 12]
     },
     "modules": [
         {
-            "description": "Additional resource pack for BSBE RenderDragon materials that enables cubemap shading and custom vertex color",
+            "description": "A shader for minecraft be",
             "type": "resources",
-            "uuid": "1585e203-99e7-436e-ab26-19633460722c",
-            "version": [0, 1, 4]
+            "uuid": "636008a5-8513-4782-be0b-f32fadd7f20f",
+            "version": [0, 1, 6]
         }
     ]
 }

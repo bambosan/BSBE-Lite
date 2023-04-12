@@ -108,7 +108,7 @@
          "inherit_from_prior_fog" : false,
          "remove_all_prior_fog" : false,
          "water_surface_color" : "#44AFF5",
-         "water_surface_transparency" : 0.650
+         "water_surface_transparency" : 0.6
       },
       "desert" : {
          "fog_identifier" : "minecraft:fog_desert",
@@ -235,6 +235,12 @@
          "fog_ids_to_merge" : [ "minecraft:fog_lukewarm_ocean" ],
          "inherit_from_prior_fog" : false,
          "water_surface_color" : "#0D96DB"
+      },
+      "mangrove_swamp" : {
+         "fog_identifier" : "minecraft:fog_mangrove_swamp",
+         "fog_ids_to_merge" : [ "minecraft:fog_mangrove_swamp" ],
+         "inherit_from_prior_fog" : false,
+         "water_surface_color" : "#3a7a6a"
       },
       "mega_spruce_taiga" : {
          "fog_identifier" : "minecraft:fog_mega_spruce_taiga",
@@ -373,14 +379,14 @@
          "fog_ids_to_merge" : [ "minecraft:fog_swampland" ],
          "inherit_from_prior_fog" : false,
          "water_surface_color" : "#4c6559",
-         "water_surface_transparency" : 0.650
+         "water_surface_transparency" : 0.6
       },
       "swampland_mutated" : {
          "fog_identifier" : "minecraft:fog_swampland_mutated",
          "fog_ids_to_merge" : [ "minecraft:fog_swampland_mutated" ],
          "inherit_from_prior_fog" : false,
          "water_surface_color" : "#4c6156",
-         "water_surface_transparency" : 0.650
+         "water_surface_transparency" : 0.6
       },
       "taiga" : {
          "fog_identifier" : "minecraft:fog_taiga",
@@ -411,7 +417,7 @@
          "fog_ids_to_merge" : [ "minecraft:fog_warm_ocean" ],
          "inherit_from_prior_fog" : false,
          "water_surface_color" : "#02B0E5",
-         "water_surface_transparency" : 0.550
+         "water_surface_transparency" : 0.6
       },
       "warped_forest" : {
          "fog_identifier" : "minecraft:fog_warped_forest",
