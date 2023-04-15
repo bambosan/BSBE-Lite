@@ -48,17 +48,17 @@ uniform sampler2D TEXTURE_2;
     }
 
     vec3 sunColor(float sunAngle){
-        sunAngle = clamp(sin(sunAngle) + 0.1, 0.0, 1.0);
+        sunAngle = clamp(sunAngle + 0.1, 0.0, 1.0);
         return vec3((1.0 - sunAngle) + sunAngle, sunAngle, sunAngle * sunAngle) * exp2(log2(sunAngle) * 0.6);
     }
 
     vec3 moonColor(float sunAngle){
-        sunAngle = clamp(-sin(sunAngle), 0.0, 1.0);
+        sunAngle = clamp(-sunAngle, 0.0, 1.0);
         return vec3((1.0 - sunAngle) * 0.2 + sunAngle, sunAngle, sunAngle) * exp2(log2(sunAngle) * 0.6) * 0.05;
     }
 
     vec3 zenithColor(float sunAngle){
-        sunAngle = clamp(sin(sunAngle), 0.0, 1.0);
+        sunAngle = clamp(sunAngle, 0.0, 1.0);
         return vec3(0.0, sunAngle * 0.13 + 0.003, sunAngle * 0.5 + 0.01);
     }
 
@@ -116,17 +116,17 @@ void main(){
         ambLight += vec3(1.0, 0.8, 0.6) * max(uv1.x * smoothstep(lightVis * uv1.y, 1.0, uv1.x), uv1.x * rain * uv1.y);
 
     float shadowMap = mix(mix(mix(clamp(dot(lightPos, fnormal), 0.0, 1.0) * (2.0 - clamp(lightPos.y, 0.0, 1.0)), 0.0, smoothstep(0.87, 0.84, uv1.y)), 0.0, rain), 1.0, smoothstep(lightVis * uv1.y, 1.0, uv1.x));
-        ambLight += (mix(sunColor(sunAngle) * vec3(1.2, 1.0, 0.8), linColor(FOG_COLOR.rgb), rain) * shadowMap);
+        ambLight += (mix(sunColor(sunPos.y) * vec3(1.2, 1.0, 0.8), linColor(FOG_COLOR.rgb), rain) * shadowMap);
         albedo.rgb = albedo.rgb * ambLight;
 
     vec3 npos = normalize(worldpos);
-    vec3 fogColor = mix(zenithColor(sunAngle), saturation(sunColor(sunAngle) + moonColor(sunAngle), 0.5), exp(-clamp(npos.y, 0.0, 1.0) * 4.0));
-        fogColor += sunColor(sunAngle) * exp(-distance(npos, sunPos) * 2.0) * exp(-clamp(npos.y, 0.0, 1.0) * 2.0) * 5.0;
-        fogColor += moonColor(sunAngle) * exp(-distance(npos, -sunPos) * 2.0) * exp(-clamp(npos.y, 0.0, 1.0) * 2.0) * 5.0;
+    vec3 fogColor = mix(zenithColor(sunPos.y), saturation(sunColor(sunPos.y) + moonColor(sunPos.y), 0.5), exp(-clamp(npos.y, 0.0, 1.0) * 4.0));
+        fogColor += sunColor(sunPos.y) * exp(-distance(npos, sunPos) * 2.0) * exp(-clamp(npos.y, 0.0, 1.0) * 2.0) * 5.0;
+        fogColor += moonColor(sunPos.y) * exp(-distance(npos, -sunPos) * 2.0) * exp(-clamp(npos.y, 0.0, 1.0) * 2.0) * 5.0;
         fogColor = mix(fogColor, linColor(FOG_COLOR.rgb), max(step(FOG_CONTROL.x, 0.0), rain));
 
     if(FOG_CONTROL.x > 0.0){
-        albedo.rgb = mix(albedo.rgb, zenithColor(sunAngle) * 2.0, clamp(length(-worldpos.xyz) * 0.01, 0.0, 1.0) * 0.01);
+        albedo.rgb = mix(albedo.rgb, zenithColor(sunPos.y) * 2.0, clamp(length(-worldpos.xyz) * 0.01, 0.0, 1.0) * 0.01);
     }
 
     #ifdef FOG
