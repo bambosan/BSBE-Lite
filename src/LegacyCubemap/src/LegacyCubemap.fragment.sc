@@ -1,10 +1,5 @@
-#version 300 es
-#pragma optimize(on)
-precision highp float;
-
-uniform vec4 FOG_COLOR;
-uniform vec2 FOG_CONTROL;
-uniform float TOTAL_REAL_WORLD_TIME;
+$input v_position, v_fogColor, v_fogDistControl
+#include <bgfx_shader.sh>
 
 // bayer dither by Jodie
 // used it for reduce strange color banding
@@ -43,17 +38,17 @@ vec3 jodieTonemap(vec3 c){
 }
 
 vec3 sunColor(float sunAngle){
-    sunAngle = clamp(sunAngle + 0.1, 0.0, 1.0);
+    sunAngle = clamp(sin(sunAngle) + 0.1, 0.0, 1.0);
     return vec3((1.0 - sunAngle) + sunAngle, sunAngle, sunAngle * sunAngle) * exp2(log2(sunAngle) * 0.6);
 }
 
 vec3 moonColor(float sunAngle){
-    sunAngle = clamp(-sunAngle, 0.0, 1.0);
+    sunAngle = clamp(-sin(sunAngle), 0.0, 1.0);
     return vec3((1.0 - sunAngle) * 0.2 + sunAngle, sunAngle, sunAngle) * exp2(log2(sunAngle) * 0.6) * 0.05;
 }
 
 vec3 zenithColor(float sunAngle){
-    sunAngle = clamp(sunAngle, 0.0, 1.0);
+    sunAngle = clamp(sin(sunAngle), 0.0, 1.0);
     return vec3(0.0, sunAngle * 0.13 + 0.003, sunAngle * 0.5 + 0.01);
 }
 
@@ -69,44 +64,43 @@ float noise2d(vec2 pos){
     return mix(mix(hash(n), hash(n + 1.0), fp.x), mix(hash(n + 57.0), hash(n + 58.0), fp.x), fp.y);
 }
 
-float fbm(vec2 pos){
+float fbm(vec2 pos, float ftime){
     float s = 0.0;
     float den = 1.0;
     pos *= 1.2;
-    pos += TOTAL_REAL_WORLD_TIME * 0.001;
+    pos += ftime * 0.001;
     for(int i = 0; i < 4; i++){
         s += noise2d(pos) * den;
         den *= 0.5;
         pos *= 2.5;
         pos += s;
-        pos -= TOTAL_REAL_WORLD_TIME * 0.1;
+        pos -= ftime * 0.1;
     }
     return smoothstep(1.0, 0.0, s) * 0.5;
 }
 
-in vec3 position;
-out vec4 fragcolor;
+void main(){
+    float sunAngle = fogTime(v_fogColor.g);
+    float rain = smoothstep(0.6, 0.3, v_fogDistControl.x);
 
-void main(){    
-    float sunAngle = fogTime(FOG_COLOR.g);
     vec3 sunPos = normalize(vec3(cos(sunAngle), sin(sunAngle), 0.0));
-    vec3 pos = normalize(vec3(position.x, -position.y + 0.127, -position.z));
+    vec3 pos = normalize(vec3(v_position.x, -v_position.y, -v_position.z));
 
-    vec3 color = mix(zenithColor(sunPos.y), saturation(sunColor(sunPos.y) + moonColor(sunPos.y), 0.5), exp(-clamp(pos.y, 0.0, 1.0) * 4.0));
+    vec3 color = mix(zenithColor(sunAngle), saturation(sunColor(sunAngle) + moonColor(sunAngle), 0.5), exp(-clamp(pos.y, 0.0, 1.0) * 4.0));
 
-        color += sunColor(sunPos.y) * exp(-distance(pos, sunPos) * 2.0) * exp(-clamp(pos.y, 0.0, 1.0) * 2.0) * 5.0;
-        color += moonColor(sunPos.y) * exp(-distance(pos, -sunPos) * 2.0) * exp(-clamp(pos.y, 0.0, 1.0) * 2.0) * 5.0;
+        color += sunColor(sunAngle) * exp(-distance(pos, sunPos) * 2.0) * exp(-clamp(pos.y, 0.0, 1.0) * 2.0) * 5.0;
+        color += moonColor(sunAngle) * exp(-distance(pos, -sunPos) * 2.0) * exp(-clamp(pos.y, 0.0, 1.0) * 2.0) * 5.0;
 
-        color += sunColor(sunPos.y) * smoothstep(0.999, 1.0, dot(pos, sunPos)) * 100.0 * pow(clamp(pos.y, 0.0, 1.0), 0.7);
-        color += moonColor(sunPos.y) * smoothstep(0.999, 1.0, dot(pos, -sunPos)) * 100.0 * pow(clamp(pos.y, 0.0, 1.0), 0.7);
+        color += sunColor(sunAngle) * smoothstep(0.999, 1.0, dot(pos, sunPos)) * 100.0 * pow(clamp(pos.y, 0.0, 1.0), 0.7);
+        color += moonColor(sunAngle) * smoothstep(0.999, 1.0, dot(pos, -sunPos)) * 100.0 * pow(clamp(pos.y, 0.0, 1.0), 0.7);
 
-        color = mix(color,  sunColor(sunPos.y) + moonColor(sunPos.y), fbm(pos.xz / pos.y) * smoothstep(0.0, 0.6, pos.y));
-        color = mix(color, linColor(FOG_COLOR.rgb), max(step(FOG_CONTROL.x, 0.0), smoothstep(0.6, 0.3, FOG_CONTROL.x)));
+        color = mix(color,  sunColor(sunAngle) + moonColor(sunAngle), fbm(pos.xz / pos.y,v_position.w) * smoothstep(0.0, 0.6, pos.y));
+        color = mix(color, linColor(v_fogColor.rgb), max(step(v_fogDistControl.x, 0.0), smoothstep(0.6, 0.3, v_fogDistControl.x)));
 
         color = color * (Bayer64(gl_FragCoord.xy) * 0.5 + 0.5);
         color = jodieTonemap(color * 5.0);
         color = saturation(color, 1.1);
         color = pow(color, vec3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));
 
-    fragcolor = vec4(color, 1.0);
+	gl_FragColor = vec4(color, 1.0);
 }

@@ -2,16 +2,16 @@
     "format_version": 2,
     "header": {
         "name": "BSBE Lite 1.6",
-        "description": "A shader for minecraft be",
-        "uuid": "e67b335f-edbb-408c-9b1f-a7313e87c0f2",
+        "description": "Lite version of Bicubic Shaders BE\nBy: @bamb0san",
+        "uuid": "3a73c7d1-92f5-454d-b336-354103d65838",
         "version": [0, 1, 6],
         "min_engine_version": [1, 18, 12]
     },
     "modules": [
         {
-            "description": "A shader for minecraft be",
+            "description": "Lite version of Bicubic Shaders BE\nBy: @bamb0san",
             "type": "resources",
-            "uuid": "636008a5-8513-4782-be0b-f32fadd7f20f",
+            "uuid": "15a20f87-6b6d-4cff-bb48-dbfc25b23fa7",
             "version": [0, 1, 6]
         }
     ]
